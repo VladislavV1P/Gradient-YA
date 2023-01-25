@@ -1,38 +1,20 @@
 import Foundation
-var input = readLine()
-var inputString = ""
-inputString = input ?? ""
 
-var width = 3
-var height = 3
-
-var digitStringW = ""
-var digitStringH = ""
-var total = 0
-for digit in inputString {
-    if digit != " " && total == 0 {
-        digitStringW += String(digit)
-    } else if digit != " " && total == 1 {
-        digitStringH += String(digit)
-    } else {
-        total += 1
-    }
+var inputData = [Int]()
+if let input = readLine() {
+    inputData = input.split(separator: " ").compactMap({Int(String($0))})
 }
 
-width = Int(digitStringH) ?? 3
-height = Int(digitStringW) ?? 3
+//test data
+let testData = "10 50"
+inputData = testData.split(separator: " ").compactMap({Int(String($0))})
+inputData
+//end test data
 
-enum ErrorRange: Error {
-    case valueOutOfRange
-}
+let width = inputData[0]
+let height = inputData[1]
 
-var heightRange = 3...1170
-var widthRange = 3...2532
-
-func gradient(width: Int, height: Int) throws -> [Array<Int>] {
-    guard heightRange.contains(height) && widthRange.contains(width) else {
-        throw ErrorRange.valueOutOfRange
-    }
+func gradient(width: Int, height: Int) -> [Array<Int>] {
     var rowH = 0
     var colW = 0
     var gradientArray = [Array<Int>]()
@@ -56,7 +38,6 @@ func gradient(width: Int, height: Int) throws -> [Array<Int>] {
 
 func sumArrayGradient(array: [Array<Int>]) {
     var sumRow = 0
-    var resultArray = [Array<Int>]()
     var arrayRow = [Int]()
     let countArrayCol = array[0].count
     var arrayCol = Array(repeating: 0, count: countArrayCol)
@@ -67,27 +48,18 @@ func sumArrayGradient(array: [Array<Int>]) {
             arrayCol[index] += element[index]
         }
     }
-    resultArray.append(arrayRow)
-    resultArray.append(arrayCol)
-    for item in arrayCol {
-        print(String(item), separator: " ", terminator: " ")
-    }
-    print()
-    for item in arrayRow {
-        print(String(item), separator: " ", terminator: " ")
-    }
+    let resultH = arrayRow.map {String($0)}.joined(separator: " ")
+    let resultW = arrayCol.map {String($0)}.joined(separator: " ")
+    print(resultH)
+    print(resultW)
 }
 
-do {
-    let gradientArray = try gradient(width: width, height: height)
-    if gradientArray.isEmpty {
-        print("no data")
-    } else {
-        sumArrayGradient(array: gradientArray)
-    }
-    
-}
-catch {
-    print("value Out Of Range")
+
+let gradientArray = gradient(width: width, height: height)
+
+if gradientArray.isEmpty {
+    print()
+} else {
+    sumArrayGradient(array: gradientArray)
 }
 
